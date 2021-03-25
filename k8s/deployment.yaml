@@ -1,0 +1,28 @@
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: sample-go-deployment
+  namespace: sample-apps
+  labels:
+    app: sample-go
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: sample-go
+  template:
+    metadata:
+      labels:
+        app: sample-go
+    spec:
+      containers:
+      - name: sample-go
+        image: gcr.io/pa-ccollicutt/build-service/sample-go
+        env:
+        - name: PORT
+          value: "8080"
+        ports:
+        - containerPort: 8080
+      imagePullSecrets:
+      - name: gcr-json-key
