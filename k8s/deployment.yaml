@@ -25,5 +25,5 @@ spec:
         ports:
         - containerPort: 8080
       imagePullSecrets:
-      - name: regcred
+        - name: regcred
       imagePullPolicy: Always
