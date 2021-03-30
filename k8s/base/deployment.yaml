@@ -18,7 +18,8 @@ spec:
     spec:
       containers:
       - name: sample-go
-        image: gcr.io/pa-ccollicutt/build-service/sample-go
+        imagePullPolicy: Always
+        image: tbs-sample-go
         env:
         - name: PORT
           value: "8080"
@@ -26,4 +27,4 @@ spec:
         - containerPort: 8080
       imagePullSecrets:
         - name: regcred
-      imagePullPolicy: Always
+
