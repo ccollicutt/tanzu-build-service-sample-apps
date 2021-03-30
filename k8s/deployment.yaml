@@ -25,4 +25,5 @@ spec:
         ports:
         - containerPort: 8080
       imagePullSecrets:
-      - name: gcr-json-key
+      - name: regcred
+      imagePullPolicy: Always

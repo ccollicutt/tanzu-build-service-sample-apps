@@ -1,10 +1,18 @@
 # Go Sample App using no imports
 
-## Building
+## Origins 
 
-`pack build go-sample --buildpack gcr.io/paketo-buildpacks/go`
+Originally from [Paketo samples](https://github.com/paketo-buildpacks/samples).
 
 ## Running
+
+### Kubernetes
+
+```bash
+kubectl create -f k8s/
+```
+
+### Docker 
 
 `docker run --interactive --tty --env PORT=8080 --publish 8080:8080 go-sample`
 
