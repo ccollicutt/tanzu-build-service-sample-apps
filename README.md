@@ -81,12 +81,12 @@ kp image create tbs-sample-python \
 
 ## Running
 
-You need to have built the images and pushed them to an image registry. It's meant to be used by the Tanzu Build Service which would do that work for you.
+You need to:
 
-That image registry is specified below in `IMAGE_LOCATION`.
-
->NOTE: It also assumes there is a secret called `regcred` in the namespace that will allow access to the registry.
-
+1. Have built the images via TBS and pushed them to an image registry
+1. Have a Kubernetes cluster to deploy to (must be able to access `$REGISTRY`)
+2. Create a namespace called `sample-apps`
+2. Ensured there is a secret called `regcred` in the `sample-apps` namespace with the correct credentials to access the `$REGISTRY`
 
 ### Clone this repository
 
@@ -125,7 +125,6 @@ kustomize build | k apply -f-
 
 
 ### python
-
 
 Assuming the image was called `tbs-sample-python`:
 
