@@ -1,4 +1,4 @@
-# Tanzu Build Service Sample Apps and Deployments
+](# Tanzu Build Service Sample Apps and Deployments
 
 This is an example of some extremely simple applications being built by the [Tanzu Build Service](https://tanzu.vmware.com/build-service) and deployed into Kubernetes.
 
@@ -10,7 +10,7 @@ This repo currently focusses on languages other than Java:
 
 ## The Value of Tanzu Build Service 
 
-There is a lot of value in the Tanzu Build Service, but the easiest one to understand is that we don't have any Dockerfiles.
+There is a lot of value in the Tanzu Build Service, but the easiest one to understand is that we don't have any Dockerfiles. Using [buildpacks](https://buildpacks.io) and [paketo](https://paketo.io) we can create container images without having to write Dockerfiles. Buildpacks/paketo are intelligent, and can analyze the source code they are given and build the right container image, including dependencies, for almost any language. Imagine that, building container images without having to write Dockerfiles!
 
 ```bash
 $ (find . -name "Dockerfile" | grep ".") || echo "No dockerfiles???? whaaa???"
@@ -36,7 +36,7 @@ export REGISTRY=<your registry>
 
 ### go
 
-Create the TBS image.
+Create the TBS image. Note how all we do is pass the git URL and that's it. TBS will analyze the code and build the right image, without us having to provide any hints.
 
 ```bash
 kp image create tbs-sample-go \
@@ -72,7 +72,7 @@ kp clusterstore add default -b gcr.io/paketo-community/python
 
 * Create a cluster builder
 
->NOTE: the `python.yaml` buildler file is in the builder folder.
+>NOTE: the `python.yaml` builder file is in the builder folder.
 
 ```bash
 export REGISTRY=<your TBS registry>
