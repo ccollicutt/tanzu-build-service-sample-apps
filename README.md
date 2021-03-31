@@ -12,7 +12,10 @@ This repo currently focusses on languages other than Java:
 
 There is a lot of value in the Tanzu Build Service, but the easiest one to understand is that we don't have any Dockerfiles.
 
-I'll say it again: *No Dockerfiles!*
+```bash
+$ (find . -name "Dockerfile" | grep ".") || echo "No dockerfiles???? whaaa???"
+No dockerfiles???? whaaa???
+```
 
 ## Origins 
 
