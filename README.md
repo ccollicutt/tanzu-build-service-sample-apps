@@ -26,7 +26,7 @@ nodejs and go apps were originally from [Paketo samples](https://github.com/pake
 We assume that:
 
 * TBS has already been [installed and configured](https://docs.pivotal.io/build-service/1-1/installing.html)
-* The `kp` CLI is available and if you rn `kp clusterbuildler list` or similar that there will be objects available
+* The `kp` CLI is available and if you run `kp clusterbuildler list` or similar that there will be objects available
 
 Set the registry location. Of course this assume TBS is all setup, secrets added, etc.
 
@@ -34,7 +34,7 @@ Set the registry location. Of course this assume TBS is all setup, secrets added
 export REGISTRY=<your registry>
 ```
 
-### go
+### Go
 
 Create the TBS image. Note how all we do is pass the git URL and that's it. TBS will analyze the code and build the right image, without us having to provide any hints.
 
@@ -46,7 +46,7 @@ kp image create tbs-sample-go \
 --git-revision main
 ```
 
-### nodejs
+### NodeJS
 
 Create the TBS image.
 
@@ -58,9 +58,9 @@ kp image create tbs-sample-nodejs \
 --git-revision main
 ```
 
-### python
+### Python
 
-#### Setup Builder
+#### Setup the Python Cluster Builder
 
 As of March, 2021, there isn't a Python builder in TBS (but will be soon) so we use the Paketo community version.
 
@@ -99,7 +99,7 @@ kp image create tbs-sample-python \
 --git-revision main
 ```
 
-## Running
+## Running in Kubernetes
 
 You need to:
 
@@ -108,7 +108,7 @@ You need to:
 2. Create a namespace called `sample-apps`
 2. Ensure there is a secret called `regcred` in the `sample-apps` namespace with the correct credentials to access the `$REGISTRY`
 
-### Clone this repository
+### Clone This Repository
 
 ```bash
 git clone https://github.com/ccollicutt/tbs-sample-apps
@@ -123,7 +123,9 @@ Set this variable to wherever TBS is pushing the built images.
 export REGISTRY=<your registry>
 ```
 
-### go
+### Deploy Apps to Kubernetes
+
+#### go
 
 ```bash
 export IMAGE_LOCATION=$REGISTRY/tbs-sample-go
@@ -132,7 +134,7 @@ kustomize edit set image tbs-sample-app=$IMAGE_LOCATION
 kustomize build | k apply -f-
 ```
 
-### nodejs
+#### NodeJS
 
 Assuming the image was called `tbs-sample-nodejs`:
 
@@ -143,8 +145,7 @@ kustomize edit set image tbs-sample-app=$IMAGE_LOCATION
 kustomize build | k apply -f-
 ```
 
-### python
-
+#### Python
 Assuming the image was called `tbs-sample-python`:
 
 ```bash
@@ -153,3 +154,19 @@ cd k8s/overlays/python
 kustomize edit set image tbs-sample-app=$IMAGE_LOCATION
 kustomize build | k apply -f-
 ```
+
+## Clean Up
+
+* Remove TBS images and deployments
+
+```
+k delete ns sample-apps
+kp image delete tbs-sample-go
+kp image delete tbs-sample-nodejs
+kp image delete tbs-sample-python
+```
+
+* Delete the images from your `$REGISTRY`
+
+* Potentially uninstall TBS
+

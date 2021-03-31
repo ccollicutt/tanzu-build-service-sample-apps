@@ -1,7 +1,0 @@
-# flask 
-
-Run:
-
-```
-flask run
-```
