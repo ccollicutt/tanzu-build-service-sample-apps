@@ -2,6 +2,12 @@
 
 This is an example of some extremely simple applications being built by the [Tanzu Build Service](https://tanzu.vmware.com/build-service) and deployed into Kubernetes.
 
+This repo currently focusses on languages other than Java:
+
+* Go
+* nodejs
+* Python
+
 ## Origins 
 
 nodejs and go apps were originally from [Paketo samples](https://github.com/paketo-buildpacks/samples).
