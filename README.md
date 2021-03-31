@@ -1,6 +1,6 @@
 # Go Sample App using no imports
 
-This is an example of some extremely simple applications being built by the [Tanzu Build Service](https://tanzu.vmware.com/build-service) and deployed into Kubernets.
+This is an example of some extremely simple applications being built by the [Tanzu Build Service](https://tanzu.vmware.com/build-service) and deployed into Kubernetes.
 
 ## Origins 
 
@@ -40,7 +40,7 @@ kp image create tbs-sample-nodejs \
 
 ### python
 
-### Setup Builder
+#### Setup Builder
 
 As of March, 2021, there isn't a Python builder in TBS (but will be soon) so we use the Paketo community version.
 
@@ -64,7 +64,7 @@ kp builder create py-builder \
 --store default
 ```
 
-### Create Image
+#### Create Image
 
 * Create the image
 
