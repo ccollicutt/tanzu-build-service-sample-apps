@@ -1,0 +1,7 @@
+# flask 
+
+Run:
+
+```
+flask run
+```
