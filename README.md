@@ -8,11 +8,22 @@ This repo currently focusses on languages other than Java:
 * nodejs
 * Python
 
+## The Value of Tanzu Build Service 
+
+There is a lot of value in the Tanzu Build Service, but the easiest one to understand is that we don't have any Dockerfiles.
+
+I'll say it again: *No Dockerfiles!*
+
 ## Origins 
 
 nodejs and go apps were originally from [Paketo samples](https://github.com/paketo-buildpacks/samples).
 
 ## Build Apps With Tanzu Build Service
+
+We assume that:
+
+* TBS has already been [installed and configured](https://docs.pivotal.io/build-service/1-1/installing.html)
+* The `kp` CLI is available and if you rn `kp clusterbuildler list` or similar that there will be objects available
 
 Set the registry location. Of course this assume TBS is all setup, secrets added, etc.
 
