@@ -1,4 +1,4 @@
-](# Tanzu Build Service Sample Apps and Deployments
+# Tanzu Build Service Sample Apps and Deployments
 
 This is an example of some extremely simple applications being built by the [Tanzu Build Service](https://tanzu.vmware.com/build-service) and deployed into Kubernetes.
 
