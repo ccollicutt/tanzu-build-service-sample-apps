@@ -19,8 +19,8 @@ export REGISTRY=<your registry>
 Create the TBS image.
 
 ```bash
-kp image create tbs-sample-apps \
---tag $REGISTRY/tbs-sample-apps \
+kp image create tbs-sample-go \
+--tag $REGISTRY/tbs-sample-go \
 --git https://github.com/ccollicutt/tbs-sample-apps/ \
 --sub-path sample-apps/go \
 --git-revision main
