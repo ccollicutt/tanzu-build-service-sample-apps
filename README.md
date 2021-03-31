@@ -106,7 +106,7 @@ You need to:
 1. Have built the images via TBS and pushed them to an image registry
 1. Have a Kubernetes cluster to deploy to (must be able to access `$REGISTRY`)
 2. Create a namespace called `sample-apps`
-2. Ensured there is a secret called `regcred` in the `sample-apps` namespace with the correct credentials to access the `$REGISTRY`
+2. Ensure there is a secret called `regcred` in the `sample-apps` namespace with the correct credentials to access the `$REGISTRY`
 
 ### Clone this repository
 
@@ -143,14 +143,13 @@ kustomize edit set image tbs-sample-app=$IMAGE_LOCATION
 kustomize build | k apply -f-
 ```
 
-
 ### python
 
 Assuming the image was called `tbs-sample-python`:
 
 ```bash
-export IMAGE_LOCATION=$REGISTRY/tbs-sample-nodejs
-cd k8s/overlays/nodejs
+export IMAGE_LOCATION=$REGISTRY/tbs-sample-python
+cd k8s/overlays/python
 kustomize edit set image tbs-sample-app=$IMAGE_LOCATION
 kustomize build | k apply -f-
 ```
