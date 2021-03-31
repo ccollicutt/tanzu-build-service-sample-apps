@@ -2,24 +2,24 @@
 kind: Deployment
 apiVersion: apps/v1
 metadata:
-  name: sample-go-deployment
+  name: sample-app
   namespace: sample-apps
   labels:
-    app: sample-go
+    app: sample-app
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: sample-go
+      app: sample-app
   template:
     metadata:
       labels:
-        app: sample-go
+        app: sample-app
     spec:
       containers:
-      - name: sample-go
+      - name: sample-app
         imagePullPolicy: Always
-        image: tbs-sample-go
+        image: tbs-sample-app
         env:
         - name: PORT
           value: "8080"
