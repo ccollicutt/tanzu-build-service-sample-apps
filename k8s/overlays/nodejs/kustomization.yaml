@@ -4,5 +4,6 @@ kind: Kustomization
 resources:
 - ../../base
 commonLabels:
-  app: sample-go
+  app: sample-nodejs
 
+nameSuffix: -nodejs

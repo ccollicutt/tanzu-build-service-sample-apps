@@ -1,13 +1,13 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: sample-go-service
+  name: sample-app
   namespace: sample-apps
   labels:
-    app: sample-go
+    app: sample-app
 spec:
   selector:
-    app: sample-go
+    app: sample-app
   ports:
     - port: 80
       protocol: TCP
