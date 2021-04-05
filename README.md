@@ -1,16 +1,18 @@
 # Tanzu Build Service Sample Apps and Deployments
 
-This is an example of some extremely simple applications being built by the [Tanzu Build Service](https://tanzu.vmware.com/build-service) and deployed into Kubernetes.
+This is an example of some extremely simple applications being built by the [Tanzu Build Service](https://tanzu.vmware.com/build-service) (TBS) and deployed into Kubernetes.
 
-This repo currently focusses on languages other than Java:
-
-* Go
-* nodejs
-* Python
+>NOTE: This repo currently focusses on languages other than Java:
+>
+>* Go
+>* nodejs
+>* Python
 
 ## The Value of Tanzu Build Service 
 
-There is a lot of value in the Tanzu Build Service, but the easiest one to understand is that we don't have any Dockerfiles. Using [buildpacks](https://buildpacks.io) and [paketo](https://paketo.io) we can create container images without having to write Dockerfiles. Buildpacks/paketo are intelligent, and can analyze the source code they are given and build the right container image, including dependencies, for almost any language. Imagine that, building container images without having to write Dockerfiles!
+There is considerable value in the Tanzu Build Service, but the easiest to understand is that when using TBS there are **no Dockerfiles**. 
+
+Using [buildpacks](https://buildpacks.io)/[paketo](https://paketo.io) we can create container images without having to write Dockerfiles. Paketo buildpacks are intelligent, and can analyze the source code repositories they are given and build the correct container image, including dependencies, for almost any language. Imagine that, building container images without having to write Dockerfiles!
 
 ```bash
 $ (find . -name "Dockerfile" | grep ".") || echo "No dockerfiles???? whaaa???"
@@ -28,7 +30,7 @@ We assume that:
 * TBS has already been [installed and configured](https://docs.pivotal.io/build-service/1-1/installing.html)
 * The `kp` CLI is available and if you run `kp clusterbuildler list` or similar that there will be objects available
 
-Set the registry location. Of course this assume TBS is all setup, secrets added, etc.
+Set the registry location. (Of course this assume TBS is all setup, secrets added, etc.)
 
 ```bash
 export REGISTRY=<your registry>
@@ -125,7 +127,7 @@ export REGISTRY=<your registry>
 
 ### Deploy Apps to Kubernetes
 
-#### go
+#### Go
 
 ```bash
 export IMAGE_LOCATION=$REGISTRY/tbs-sample-go
@@ -168,5 +170,5 @@ kp image delete tbs-sample-python
 
 * Delete the images from your `$REGISTRY`
 
-* Potentially uninstall TBS
+* Potentially uninstall TBS (but why would you?)
 
