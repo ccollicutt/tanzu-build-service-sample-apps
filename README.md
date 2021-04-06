@@ -146,11 +146,13 @@ kp clusterstore add default -b gcr.io/paketo-community/python
 
 >NOTE: the `python.yaml` builder file is in the builder folder.
 
+>NOTE: It's possible to use a different registry for TBS builders than where the resulting application images are pushed to. Below we are using the `TBS_REGISTRY`.
+
 ```bash
-export REGISTRY=<your TBS registry>
+export TBS_REGISTRY=<your TBS registry>
 cd builders
 kp clusterbuilder create py-builder \
---tag $REGISTRY/paketo-buildpacks_python \
+--tag $TBS_REGISTRY/paketo-buildpacks_python \
 --order python.yaml \
 --stack base \
 --store default
@@ -249,6 +251,8 @@ kubectl create secret docker-registry regcred \
 
 
 ### Validate Variables and Environment
+
+It's easy to forget one or all of these. :)
 
 ```
 [ -z "$REGISTRY" ] && echo "ERROR: Please set REGISTRY variable"
