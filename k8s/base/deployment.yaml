@@ -25,6 +25,9 @@ spec:
           value: "8080"
         ports:
         - containerPort: 8080
+        envFrom:
+        - configMapRef:
+            name: sample-app-config
       imagePullSecrets:
         - name: regcred
 

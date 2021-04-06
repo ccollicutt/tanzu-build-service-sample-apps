@@ -4,3 +4,8 @@ kind: Kustomization
 resources:
   - service.yaml
   - deployment.yaml
+
+configMapGenerator:
+- name: sample-app-config
+  literals:
+    - WAVEFRONT_PROXY="localhost"
