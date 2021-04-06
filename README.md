@@ -40,7 +40,8 @@ export REGISTRY=<your registry>
 
 Create the TBS image. Note how all we do is pass the git URL and that's it. TBS will analyze the code and build the right image, without us having to provide any hints.
 
-```bash
+```bas
+[ -z "$REGISTRY" ] && echo "ERROR: Please set REGISTRY variable" || \
 kp image create tbs-sample-go \
 --tag $REGISTRY/tbs-sample-go \
 --git https://github.com/ccollicutt/tbs-sample-apps/ \
@@ -48,9 +49,16 @@ kp image create tbs-sample-go \
 --git-revision main
 ```
 
+While that build is running we can watch or view the logs.
+
+```bash
+kp build logs tbs-sample-go
+```
+
 We can also use dry run and output to yaml to get an example the Kubernetes object definition.
 
 ```
+[ -z "$REGISTRY" ] && echo "ERROR: Please set REGISTRY variable" || \
 kp image create tbs-sample-go \
 --tag $REGISTRY/tbs-sample-go \
 --git https://github.com/ccollicutt/tbs-sample-apps/ \
@@ -112,6 +120,7 @@ sourceresolvers.kpack.io
 Create the TBS image.
 
 ```bash
+[ -z "$REGISTRY" ] && echo "ERROR: Please set REGISTRY variable" || \
 kp image create tbs-sample-nodejs \
 --tag $REGISTRY/tbs-sample-nodejs \
 --git https://github.com/ccollicutt/tbs-sample-apps/ \
@@ -140,11 +149,39 @@ kp clusterstore add default -b gcr.io/paketo-community/python
 ```bash
 export REGISTRY=<your TBS registry>
 cd builders
-kp builder create py-builder \
+kp clusterbuilder create py-builder \
 --tag $REGISTRY/paketo-buildpacks_python \
 --order python.yaml \
 --stack base \
 --store default
+```
+
+Examine its status.
+
+```
+kp clusterbuilder status py-builder
+```
+
+eg. output:
+
+```
+$ kp clusterbuilder status py-builder
+Status:       Ready
+Image:        gcr.io/pa-ccollicutt/build-service/paketo-buildpacks_python@sha256:e5ce756420e3d152b913f4fa7fa16421249e745204d967bea8330907774d6204
+Stack:        io.buildpacks.stacks.bionic
+Run Image:    gcr.io/pa-ccollicutt/build-service/run@sha256:0bf521429c5fac06616ef542da735f9e34c4997cc5d5987242eb7199b04ac923
+
+BUILDPACK ID                       VERSION    HOMEPAGE
+paketo-community/pipenv            0.0.118    
+paketo-community/conda             0.0.113    
+paketo-community/pip               0.0.140    
+paketo-community/python-runtime    0.0.170    
+paketo-community/python            0.0.4      
+
+
+DETECTION ORDER                    
+Group #1                           
+  paketo-community/python@0.0.4    
 ```
 
 #### Create Image
@@ -154,6 +191,7 @@ kp builder create py-builder \
 >Note the use of the `--cluster-builder` option.
 
 ```bash
+[ -z "$REGISTRY" ] && echo "ERROR: Please set REGISTRY variable" || \
 kp image create tbs-sample-python \
 --cluster-builder py-builder \
 --tag $REGISTRY/tbs-sample-python \
@@ -175,19 +213,47 @@ You need to:
 
 ### Clone This Repository
 
-To access the Kubernets manifests, clone this repository.
+To access the Kubernetes manifests, clone this repository.
 
 ```bash
-git clone https://github.com/ccollicutt/tbs-sample-apps
-cd tbs-sample-apps
+git clone https://github.com/ccollicutt/tanzu-build-service-sample-apps
+cd tanzu-build-service-sample-apps
+```
+
+### Create a Namespace
+
+```
+kubectl create namespace sample-apps
 ```
 
 ### Set Registry Location
 
-Set this variable to wherever TBS is pushing the built images.
+If it's not currently set, create this variable to wherever TBS is pushing the built images.
 
 ```bash
 export REGISTRY=<your registry>
+```
+
+### Create a Regcred Kubernetes Secret
+
+```
+export REGISTRY_USER=<your user>
+export REGISTRY_PASSWORD=<your password>
+export REGISTRY_EMAIL=<your email>
+kubectl create secret docker-registry regcred \
+--docker-server=$REGISTRY \
+--docker-username=$REGISTRY_USER \
+--docker-password=$REGISTRY_PASSWORD \
+--docker-email=$REGISTRY_EMAIL
+```
+
+
+### Validate Variables and Environment
+
+```
+[ -z "$REGISTRY" ] && echo "ERROR: Please set REGISTRY variable"
+kubectl get ns sample-apps > /dev/null || echo "ERROR: Please create sample-apps ns"
+kubectl get secret regcreds > /dev/null || echo "ERROR: Please create a kubernetes registry access secret"
 ```
 
 ### Deploy Apps to Kubernetes
@@ -196,9 +262,10 @@ export REGISTRY=<your registry>
 
 ```bash
 export IMAGE_LOCATION=$REGISTRY/tbs-sample-go
-cd k8s/overlays/go
+pushd k8s/overlays/go
 kustomize edit set image tbs-sample-app=$IMAGE_LOCATION
 kustomize build | k apply -f-
+popd
 ```
 
 #### NodeJS
@@ -207,9 +274,10 @@ Assuming the image was called `tbs-sample-nodejs`:
 
 ```bash
 export IMAGE_LOCATION=$REGISTRY/tbs-sample-nodejs
-cd k8s/overlays/nodejs
+pushd k8s/overlays/nodejs
 kustomize edit set image tbs-sample-app=$IMAGE_LOCATION
 kustomize build | k apply -f-
+popd
 ```
 
 #### Python
@@ -217,9 +285,26 @@ Assuming the image was called `tbs-sample-python`:
 
 ```bash
 export IMAGE_LOCATION=$REGISTRY/tbs-sample-python
-cd k8s/overlays/python
+pushd k8s/overlays/python
 kustomize edit set image tbs-sample-app=$IMAGE_LOCATION
 kustomize build | k apply -f-
+popd
+```
+
+## Access the Applications
+
+```
+export GO_LB=$(kubectl get svc sample-app -n sample-apps -o jsonpath="{.status.loadBalancer.ingress[*].hostname}")
+export NODEJS_LB=$(kubectl get svc sample-app-nodejs -n sample-apps -o jsonpath="{.status.loadBalancer.ingress[*].hostname}")
+export PYTHON_LB=$(kubectl get svc sample-app-python -n sample-apps -o jsonpath="{.status.loadBalancer.ingress[*].hostname}")
+```
+
+And curl them.
+
+```
+curl http://$GO_LB
+curl $NODEJS_LB
+curl $PYTHON_LB
 ```
 
 ## Clean Up

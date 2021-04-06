@@ -6,3 +6,4 @@ resources:
 commonLabels:
   app: sample-go
 
+nameSuffix: -go
