@@ -336,6 +336,16 @@ Set up a while loop to access the nodejs app to send the counter.
 while true; do curl $NODEJS_LB; sleep 1; echo; done
 ```
 
+## Restart All Pods
+
+Use `kubectl rollout restart` to restart all the pods if needed, ie. pull new images.
+
+```
+for i in go nodejs python; do
+  kubectl rollout restart deployment sample-app-$i
+done
+```
+
 ## Clean Up
 
 * Remove TBS images and deployments
