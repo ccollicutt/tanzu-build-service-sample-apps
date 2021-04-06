@@ -306,9 +306,9 @@ export PYTHON_LB=$(kubectl get svc sample-app-python -n sample-apps -o jsonpath=
 And curl them.
 
 ```
-curl http://$GO_LB
-curl $NODEJS_LB
-curl $PYTHON_LB
+curl -s $GO_LB | grep title
+curl -s $NODEJS_LB | grep title
+curl -s $PYTHON_LB | grep title
 ```
 
 ## Clean Up
