@@ -311,6 +311,31 @@ curl -s $NODEJS_LB | grep title
 curl -s $PYTHON_LB | grep title
 ```
 
+## Tanzu Observability by Wavefront
+
+The nodejs sample application has as simple counter configured, and once it's deployed into a Kubernetes cluster that has been attached to Tanzu Mission Control and had the Tanzu Observability by Wavefront integration added will be able to send metrics via the handy proxy installed.
+
+```
+$ k get svc
+NAME                    TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)             AGE
+wavefront-proxy-tanzu   ClusterIP   100.68.200.247   <none>        2878/TCP,9411/TCP   8m11s
+```
+
+eg. environment variable from the config map.
+
+```
+$ k exec -it -n sample-apps sample-app-nodejs-5b6648dc59-c5n68 -- env | grep 
+WAVEFRONT WAVEFRONT_PROXY=wavefront-proxy-tanzu.tanzu-observability-saas.svc.cluster.local
+```
+
+Once logged into the Wavefront interface, search for the source `tbs-sample-app-nodejs` and there will be a metric called `wavefront.nodejs.proxy.request.counter`
+
+Set up a while loop to access the nodejs app to send the counter.
+
+```
+while true; do curl $NODEJS_LB; sleep 1; echo; done
+```
+
 ## Clean Up
 
 * Remove TBS images and deployments
