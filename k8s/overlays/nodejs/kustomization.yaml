@@ -7,3 +7,6 @@ commonLabels:
   app: sample-nodejs
 
 nameSuffix: -nodejs
+
+patchesStrategicMerge:
+- config-map.yaml
