@@ -298,7 +298,7 @@ popd
 ## Access the Applications
 
 ```
-export GO_LB=$(kubectl get svc sample-app -n sample-apps -o jsonpath="{.status.loadBalancer.ingress[*].hostname}")
+export GO_LB=$(kubectl get svc sample-app-go -n sample-apps -o jsonpath="{.status.loadBalancer.ingress[*].hostname}")
 export NODEJS_LB=$(kubectl get svc sample-app-nodejs -n sample-apps -o jsonpath="{.status.loadBalancer.ingress[*].hostname}")
 export PYTHON_LB=$(kubectl get svc sample-app-python -n sample-apps -o jsonpath="{.status.loadBalancer.ingress[*].hostname}")
 ```
