@@ -2,8 +2,8 @@
 
 This is an example of some extremely simple applications being built by the [Tanzu Build Service](https://tanzu.vmware.com/build-service) (TBS) and deployed into Kubernetes.
 
-| :exclamation:  This repo currently focusses on languages other than Java  |
-|---------------------------------------------------------------------------|
+| :exclamation:  This repo currently focuses on languages other than Java  |
+|--------------------------------------------------------------------------|
 
 * Go
 * nodejs
@@ -147,9 +147,11 @@ kp clusterstore add default -b gcr.io/paketo-community/python
 
 * Create a cluster builder
 
->NOTE: the `python.yaml` builder file is in the builder folder.
+| :exclamation:  The `python.yaml` builder file is in the builder folder.  |
+|--------------------------------------------------------------------------|
 
->NOTE: It's possible to use a different registry for TBS builders than where the resulting application images are pushed to. Below we are using the `TBS_REGISTRY`.
+| :exclamation:   It's possible to use a different registry for TBS builders than where the resulting application images are pushed to. Below we are using the `TBS_REGISTRY`.  |
+|--------------------------------------------------------------------------|
 
 ```bash
 export TBS_REGISTRY=<your TBS registry>
