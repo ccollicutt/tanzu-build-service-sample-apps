@@ -2,7 +2,7 @@
 
 This is an example of some extremely simple applications being built by the [Tanzu Build Service](https://tanzu.vmware.com/build-service) (TBS) and deployed into Kubernetes.
 
-| :exclamation:  This repo currently focuses on languages other than Java  |
+| :large_blue_diamond: This repo currently focuses on languages other than Java  |
 |--------------------------------------------------------------------------|
 
 * Go
