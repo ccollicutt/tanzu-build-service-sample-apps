@@ -2,6 +2,9 @@
 
 This is an example of some extremely simple applications being built by the [Tanzu Build Service](https://tanzu.vmware.com/build-service) (TBS) and deployed into Kubernetes.
 
+| :exclamation:  This is very important   |
+|-----------------------------------------|
+
 >NOTE: This repo currently focusses on languages other than Java:
 >
 >* Go
@@ -40,7 +43,7 @@ export REGISTRY=<your registry>
 
 Create the TBS image. Note how all we do is pass the git URL and that's it. TBS will analyze the code and build the right image, without us having to provide any hints.
 
-```bas
+```bash
 [ -z "$REGISTRY" ] && echo "ERROR: Please set REGISTRY variable" || \
 kp image create tbs-sample-go \
 --tag $REGISTRY/tbs-sample-go \
@@ -57,7 +60,7 @@ kp build logs tbs-sample-go
 
 We can also use dry run and output to yaml to get an example the Kubernetes object definition.
 
-```
+```bash
 [ -z "$REGISTRY" ] && echo "ERROR: Please set REGISTRY variable" || \
 kp image create tbs-sample-go \
 --tag $REGISTRY/tbs-sample-go \
@@ -68,9 +71,11 @@ kp image create tbs-sample-go \
 --output yaml
 ```
 
-eg. output:
+We can review the Kubernetes YAML that `kp` uses by using `--dry-run --output yaml`.
+<details><summary>View example output</summary>
+<p>
 
-```
+```bash
 $ kp image create tbs-sample-go \
 > --tag $REGISTRY/tbs-sample-go \
 > --git https://github.com/ccollicutt/tbs-sample-apps/ \
@@ -102,12 +107,12 @@ spec:
   tag: /tbs-sample-go
 status: {}
 ```
+</p>
+</details>
 
-As can be seen above, `kp` is actually creating native Kubernetes objects.
+We can also take a look at the CRDs:
 
-We can take a look at the CRDs:
-
-```
+```bash
 $ kubectl api-resources --verbs list --namespaced -o name | grep kpack
 builders.kpack.io
 builds.kpack.io
@@ -160,13 +165,14 @@ kp clusterbuilder create py-builder \
 
 Examine its status.
 
-```
+```bash
 kp clusterbuilder status py-builder
 ```
 
-eg. output:
+<details><summary>View example output</summary>
+<p>
 
-```
+```bash
 $ kp clusterbuilder status py-builder
 Status:       Ready
 Image:        gcr.io/pa-ccollicutt/build-service/paketo-buildpacks_python@sha256:e5ce756420e3d152b913f4fa7fa16421249e745204d967bea8330907774d6204
@@ -185,6 +191,8 @@ DETECTION ORDER
 Group #1                           
   paketo-community/python@0.0.4    
 ```
+</p>
+</details>
 
 #### Create Image
 
@@ -222,12 +230,6 @@ git clone https://github.com/ccollicutt/tanzu-build-service-sample-apps
 cd tanzu-build-service-sample-apps
 ```
 
-### Create a Namespace
-
-```
-kubectl create namespace sample-apps
-```
-
 ### Set Registry Location
 
 If it's not currently set, create this variable to wherever TBS is pushing the built images.
@@ -238,7 +240,9 @@ export REGISTRY=<your registry>
 
 ### Create a Regcred Kubernetes Secret
 
-```
+Kubernetes needs credentials to be able to pull the TBS created images from the image registry.
+
+```bash
 export REGISTRY_USER=<your user>
 export REGISTRY_PASSWORD=<your password>
 export REGISTRY_EMAIL=<your email>
@@ -249,20 +253,20 @@ kubectl create secret docker-registry regcred \
 --docker-email=$REGISTRY_EMAIL
 ```
 
-
 ### Validate Variables and Environment
 
-It's easy to forget one or all of these. :)
+It's easy to forget one of these. :)
 
-```
+```bash
 [ -z "$REGISTRY" ] && echo "ERROR: Please set REGISTRY variable"
-kubectl get ns sample-apps > /dev/null || echo "ERROR: Please create sample-apps ns"
 kubectl get secret regcreds > /dev/null || echo "ERROR: Please create a kubernetes registry access secret"
 ```
 
 ### Deploy Apps to Kubernetes
 
 #### Go
+
+Deploy the Go application.
 
 ```bash
 export IMAGE_LOCATION=$REGISTRY/tbs-sample-go
@@ -285,6 +289,7 @@ popd
 ```
 
 #### Python
+
 Assuming the image was called `tbs-sample-python`:
 
 ```bash
@@ -297,7 +302,9 @@ popd
 
 ## Access the Applications
 
-```
+First get the assocated loabalancers for each application.
+
+```bash
 export GO_LB=$(kubectl get svc sample-app-go -n sample-apps -o jsonpath="{.status.loadBalancer.ingress[*].hostname}")
 export NODEJS_LB=$(kubectl get svc sample-app-nodejs -n sample-apps -o jsonpath="{.status.loadBalancer.ingress[*].hostname}")
 export PYTHON_LB=$(kubectl get svc sample-app-python -n sample-apps -o jsonpath="{.status.loadBalancer.ingress[*].hostname}")
@@ -305,17 +312,33 @@ export PYTHON_LB=$(kubectl get svc sample-app-python -n sample-apps -o jsonpath=
 
 And curl them.
 
-```
+```bash
 curl -s $GO_LB | grep title
 curl -s $NODEJS_LB | grep title
 curl -s $PYTHON_LB | grep title
 ```
 
+<details><summary>View example output</summary>
+<p>
+
+```bash
+$ curl -s $GO_LB | grep title
+    <title>Golang powered By Paketo Buildpacks</title>
+ fury-161  tanzu-build…  sample-apps  
+$ curl -s $NODEJS_LB | grep title
+    <title>NodeJS powered By Paketo Buildpacks</title>
+ fury-161  tanzu-build…  sample-apps  
+$ curl -s $PYTHON_LB | grep title
+    <title>Python powered By Paketo Buildpacks</title>
+```
+</p>
+</details>
+
 ## Tanzu Observability by Wavefront
 
 The nodejs sample application has as simple counter configured, and once it's deployed into a Kubernetes cluster that has been attached to Tanzu Mission Control and had the Tanzu Observability by Wavefront integration added will be able to send metrics via the handy proxy installed.
 
-```
+```bash
 $ k get svc
 NAME                    TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)             AGE
 wavefront-proxy-tanzu   ClusterIP   100.68.200.247   <none>        2878/TCP,9411/TCP   8m11s
@@ -323,7 +346,7 @@ wavefront-proxy-tanzu   ClusterIP   100.68.200.247   <none>        2878/TCP,9411
 
 eg. environment variable from the config map.
 
-```
+```bash
 $ k exec -it -n sample-apps sample-app-nodejs-5b6648dc59-c5n68 -- env | grep 
 WAVEFRONT WAVEFRONT_PROXY=wavefront-proxy-tanzu.tanzu-observability-saas.svc.cluster.local
 ```
@@ -332,7 +355,7 @@ Once logged into the Wavefront interface, search for the source `tbs-sample-app-
 
 Set up a while loop to access the nodejs app to send the counter.
 
-```
+```bash
 while true; do curl $NODEJS_LB; sleep 1; echo; done
 ```
 
@@ -340,7 +363,7 @@ while true; do curl $NODEJS_LB; sleep 1; echo; done
 
 Use `kubectl rollout restart` to restart all the pods if needed, ie. pull new images.
 
-```
+```bash
 for i in go nodejs python; do
   kubectl rollout restart deployment sample-app-$i
 done
@@ -350,7 +373,7 @@ done
 
 * Remove TBS images and deployments
 
-```
+```bash
 k delete ns sample-apps
 kp image delete tbs-sample-go
 kp image delete tbs-sample-nodejs
