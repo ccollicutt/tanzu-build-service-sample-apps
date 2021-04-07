@@ -2,14 +2,12 @@
 
 This is an example of some extremely simple applications being built by the [Tanzu Build Service](https://tanzu.vmware.com/build-service) (TBS) and deployed into Kubernetes.
 
-| :exclamation:  This is very important   |
-|-----------------------------------------|
+| :exclamation:  This repo currently focusses on languages other than Java  |
+|---------------------------------------------------------------------------|
 
->NOTE: This repo currently focusses on languages other than Java:
->
->* Go
->* nodejs
->* Python
+* Go
+* nodejs
+* Python
 
 ## The Value of Tanzu Build Service 
 
