@@ -147,10 +147,10 @@ kp clusterstore add default -b gcr.io/paketo-community/python
 
 * Create a cluster builder
 
-| :exclamation:  The `python.yaml` builder file is in the builder folder.  |
+| :exclamation: The `python.yaml` builder file is in the builder folder.  |
 |--------------------------------------------------------------------------|
 
-| :exclamation:   It's possible to use a different registry for TBS builders than where the resulting application images are pushed to. Below we are using the `TBS_REGISTRY`.  |
+| :exclamation: It's possible to use a different registry for TBS builders than where the resulting application images are pushed to.  |
 |--------------------------------------------------------------------------|
 
 ```bash
@@ -198,7 +198,9 @@ Group #1
 
 * Create the image
 
->Note the use of the `--cluster-builder` option.
+| :exclamation: Note the use of the `--cluster-builder` option.  |
+|----------------------------------------------------------------|
+
 
 ```bash
 [ -z "$REGISTRY" ] && echo "ERROR: Please set REGISTRY variable" || \
@@ -323,11 +325,9 @@ curl -s $PYTHON_LB | grep title
 
 ```bash
 $ curl -s $GO_LB | grep title
-    <title>Golang powered By Paketo Buildpacks</title>
- fury-161  tanzu-build…  sample-apps  
+    <title>Golang powered By Paketo Buildpacks</title> 
 $ curl -s $NODEJS_LB | grep title
     <title>NodeJS powered By Paketo Buildpacks</title>
- fury-161  tanzu-build…  sample-apps  
 $ curl -s $PYTHON_LB | grep title
     <title>Python powered By Paketo Buildpacks</title>
 ```
