@@ -272,6 +272,17 @@ First, lets validate there are no Dockerfiles in this repository.
 (find . -name "Dockerfile" | grep ".") || echo "No Dockerfiles found"
 ```
 
+<details><summary>View example output</summary>
+<p>
+
+```bash
+$ (find . -name "Dockerfile" | grep ".") || echo "No Dockerfiles found"
+No Dockerfiles found
+```
+
+</p>
+</details>
+
 
 
 #### Go
