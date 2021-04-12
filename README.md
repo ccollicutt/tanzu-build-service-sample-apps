@@ -148,10 +148,10 @@ kp clusterstore add default -b gcr.io/paketo-community/python
 * Create a cluster builder
 
 | :exclamation: The `python.yaml` builder file is in the builder folder.  |
-|--------------------------------------------------------------------------|
+|-------------------------------------------------------------------------|
 
 | :exclamation: It's possible to use a different registry for TBS builders than where the resulting application images are pushed to.  |
-|--------------------------------------------------------------------------|
+|--------------------------------------------------------------------------------------------------------------------------------------|
 
 ```bash
 export TBS_REGISTRY=<your TBS registry>
@@ -265,6 +265,14 @@ kubectl get secret regcreds > /dev/null || echo "ERROR: Please create a kubernet
 ```
 
 ### Deploy Apps to Kubernetes
+
+First, lets validate there are no Dockerfiles in this repository. 
+
+```bash
+(find . -name "Dockerfile" | grep ".") || echo "No Dockerfiles found"
+```
+
+
 
 #### Go
 
