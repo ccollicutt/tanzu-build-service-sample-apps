@@ -240,6 +240,12 @@ If it's not currently set, create this variable to wherever TBS is pushing the b
 export REGISTRY=<your registry>
 ```
 
+### Create a Namespace for the Sample Apps
+
+```bash
+k create ns sample-apps
+```
+
 ### Create a Regcred Kubernetes Secret
 
 Kubernetes needs credentials to be able to pull the TBS created images from the image registry.
@@ -283,8 +289,6 @@ No Dockerfiles found
 </p>
 </details>
 
-
-
 #### Go
 
 Deploy the Go application.
@@ -325,6 +329,10 @@ popd
 
 First get the assocated loabalancers for each application.
 
+
+| :large_blue_diamond: It can take a few minutes for the loadbalancers to become available |
+|------------------------------------------------------------------------------------------|
+
 ```bash
 export GO_LB=$(kubectl get svc sample-app-go -n sample-apps -o jsonpath="{.status.loadBalancer.ingress[*].hostname}")
 export NODEJS_LB=$(kubectl get svc sample-app-nodejs -n sample-apps -o jsonpath="{.status.loadBalancer.ingress[*].hostname}")
@@ -352,6 +360,20 @@ $ curl -s $PYTHON_LB | grep title
 ```
 </p>
 </details>
+
+## Optional: Use Dive to Review the Image Layers
+
+It's interesting to look at the layers of the resulting container image files.
+
+Try [Dive](https://github.com/wagoodman/dive) to review the images.
+
+
+| :large_blue_diamond: Dive is an interactive shell GUI command  |
+|----------------------------------------------------------------|
+
+```bash
+$ dive $REGISTRY/tbs/tbs-sample-python
+```
 
 ## Tanzu Observability by Wavefront
 
