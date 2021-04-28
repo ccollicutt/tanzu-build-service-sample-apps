@@ -20,6 +20,12 @@ $ (find . -name "Dockerfile" | grep ".") || echo "No dockerfiles???? whaaa???"
 No dockerfiles???? whaaa???
 ```
 
+## Buildpacks
+
+Dockerfiles are great. But they are hard to scale. 
+
+* [Writing Good Dockerfiles](https://jkutner.github.io/2021/04/26/write-good-dockerfile.html) - ie. why using buildpacks is easier
+
 ## Origins 
 
 nodejs and go apps were originally from [Paketo samples](https://github.com/paketo-buildpacks/samples).
