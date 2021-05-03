@@ -451,14 +451,25 @@ done
 
 ## Clean Up
 
+* Delelete the kubernetes objects
+
+```
+for i in go nodejs python; do
+  pushd k8s/overlays/$i
+    kustomize build | kubectl delete -f-
+  popd
+done
+```
+
 * Remove TBS images and deployments
 
 ```bash
-k delete ns sample-apps
 kp image delete tbs-sample-go
 kp image delete tbs-sample-nodejs
 kp image delete tbs-sample-python
 ```
+
+* Remove the python cluster builder
 
 * Delete the images from your `$REPOSITORY`
 
