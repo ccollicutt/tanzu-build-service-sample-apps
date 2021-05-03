@@ -43,14 +43,40 @@ Set the registry location. (Of course this assume TBS is all setup, secrets adde
 export REGISTRY=<your registry>
 ```
 
+### Direnv
+
+It may be useful to setup a `direnv` configuation to set the `REGISTRY` variable. 
+
+Copy the `envrc-example` file to `.envrc` and edit it to point to your image registry.
+
+```
+cp envrc-example .envrc
+# edit the file
+```
+
+Install `direnv` and allow the `.envrc` file.
+
+```
+direnv allow
+```
+
+eg. 
+
+```
+$ direnv allow
+direnv: loading ~/working/tanzu-build-service-sample-apps/.envrc
+direnv: export +REPOSITORY
+```
+
+
 ### Build an Image for a Go Application
 
 Create the TBS image. Note how all we do is pass the git URL and that's it. TBS will analyze the code and build the right image, without us having to provide any hints.
 
 ```bash
-[ -z "$REGISTRY" ] && echo "ERROR: Please set REGISTRY variable" || \
+[ -z "$REPOSITORY" ] && echo "ERROR: Please set REGISTRY variable" || \
 kp image create tbs-sample-go \
---tag $REGISTRY/tbs-sample-go \
+--tag $REPOSITORY/tbs-sample-go \
 --git https://github.com/ccollicutt/tbs-sample-apps/ \
 --sub-path sample-apps/go \
 --git-revision main
@@ -65,9 +91,9 @@ kp build logs tbs-sample-go
 We can also use dry run and output to yaml to get an example the Kubernetes object definition.
 
 ```bash
-[ -z "$REGISTRY" ] && echo "ERROR: Please set REGISTRY variable" || \
+[ -z "$REPOSITORY" ] && echo "ERROR: Please set REGISTRY variable" || \
 kp image create tbs-sample-go \
---tag $REGISTRY/tbs-sample-go \
+--tag $REPOSITORY/tbs-sample-go \
 --git https://github.com/ccollicutt/tbs-sample-apps/ \
 --sub-path sample-apps/go \
 --git-revision main \
@@ -81,7 +107,7 @@ We can review the Kubernetes YAML that `kp` uses by using `--dry-run --output ya
 
 ```bash
 $ kp image create tbs-sample-go \
-> --tag $REGISTRY/tbs-sample-go \
+> --tag $REPOSITORY/tbs-sample-go \
 > --git https://github.com/ccollicutt/tbs-sample-apps/ \
 > --sub-path sample-apps/go \
 > --git-revision main \
@@ -129,9 +155,9 @@ sourceresolvers.kpack.io
 Create the TBS image.
 
 ```bash
-[ -z "$REGISTRY" ] && echo "ERROR: Please set REGISTRY variable" || \
+[ -z "$REPOSITORY" ] && echo "ERROR: Please set REGISTRY variable" || \
 kp image create tbs-sample-nodejs \
---tag $REGISTRY/tbs-sample-nodejs \
+--tag $REPOSITORY/tbs-sample-nodejs \
 --git https://github.com/ccollicutt/tbs-sample-apps/ \
 --sub-path sample-apps/nodejs \
 --git-revision main
@@ -160,10 +186,10 @@ kp clusterstore add default -b gcr.io/paketo-community/python
 |--------------------------------------------------------------------------------------------------------------------------------------|
 
 ```bash
-export TBS_REGISTRY=<your TBS registry>
 cd builders
+[ -z "$TBS_REPOSITORY" ] && echo "ERROR: Please set REGISTRY variable" || \
 kp clusterbuilder create py-builder \
---tag $TBS_REGISTRY/paketo-buildpacks_python \
+--tag $TBS_REPOSITORY/paketo-buildpacks_python \
 --order python.yaml \
 --stack base \
 --store default
@@ -209,14 +235,21 @@ Group #1
 
 
 ```bash
-[ -z "$REGISTRY" ] && echo "ERROR: Please set REGISTRY variable" || \
+[ -z "$REPOSITORY" ] && echo "ERROR: Please set REGISTRY variable" || \
 kp image create tbs-sample-python \
 --cluster-builder py-builder \
---tag $REGISTRY/tbs-sample-python \
+--tag $REPOSITORY/tbs-sample-python \
 --git https://github.com/ccollicutt/tbs-sample-apps/ \
 --sub-path sample-apps/python \
 --git-revision main
 ```
+
+Watch the build logs.
+
+```
+kp build logs tbs-sample-python
+```
+
 
 ## Running in Kubernetes
 
@@ -225,9 +258,9 @@ Now that we've created the images we can finally use Kubernetes (try using Kuber
 You need to:
 
 1. Have built the images above via TBS, which will have pushed them to an image registry
-1. Have a Kubernetes cluster to deploy to (must be able to access `$REGISTRY`)
+1. Have a Kubernetes cluster to deploy to (must be able to access `$REPOSITORY`)
 2. Create a namespace called `sample-apps`
-2. Ensure there is a secret called `regcred` in the `sample-apps` namespace with the correct credentials to access the `$REGISTRY`
+2. Ensure there is a secret called `regcred` in the `sample-apps` namespace with the correct credentials to access the `$REPOSITORY`
 
 ### Clone This Repository
 
@@ -243,7 +276,7 @@ cd tanzu-build-service-sample-apps
 If it's not currently set, create this variable to wherever TBS is pushing the built images.
 
 ```bash
-export REGISTRY=<your registry>
+export REPOSITORY=<your registry>
 ```
 
 ### Create a Namespace for the Sample Apps
@@ -261,10 +294,10 @@ export REGISTRY_USER=<your user>
 export REGISTRY_PASSWORD=<your password>
 export REGISTRY_EMAIL=<your email>
 kubectl create secret docker-registry regcred \
---docker-server=$REGISTRY \
---docker-username=$REGISTRY_USER \
---docker-password=$REGISTRY_PASSWORD \
---docker-email=$REGISTRY_EMAIL
+--docker-server=$REPOSITORY \
+--docker-username=$REPOSITORY_USER \
+--docker-password=$REPOSITORY_PASSWORD \
+--docker-email=$REPOSITORY_EMAIL
 ```
 
 ### Validate Variables and Environment
@@ -272,8 +305,8 @@ kubectl create secret docker-registry regcred \
 It's easy to forget one of these. :)
 
 ```bash
-[ -z "$REGISTRY" ] && echo "ERROR: Please set REGISTRY variable"
-kubectl get secret regcreds > /dev/null || echo "ERROR: Please create a kubernetes registry access secret"
+[ -z "$REPOSITORY" ] && echo "ERROR: Please set REGISTRY variable"
+kubectl get secret regcred > /dev/null || echo "ERROR: Please create a kubernetes registry access secret"
 ```
 
 ### Deploy Apps to Kubernetes
@@ -300,7 +333,7 @@ No Dockerfiles found
 Deploy the Go application.
 
 ```bash
-export IMAGE_LOCATION=$REGISTRY/tbs-sample-go
+export IMAGE_LOCATION=$REPOSITORY/tbs-sample-go
 pushd k8s/overlays/go
 kustomize edit set image tbs-sample-app=$IMAGE_LOCATION
 kustomize build | k apply -f-
@@ -312,7 +345,7 @@ popd
 Assuming the image was called `tbs-sample-nodejs`:
 
 ```bash
-export IMAGE_LOCATION=$REGISTRY/tbs-sample-nodejs
+export IMAGE_LOCATION=$REPOSITORY/tbs-sample-nodejs
 pushd k8s/overlays/nodejs
 kustomize edit set image tbs-sample-app=$IMAGE_LOCATION
 kustomize build | k apply -f-
@@ -324,7 +357,7 @@ popd
 Assuming the image was called `tbs-sample-python`:
 
 ```bash
-export IMAGE_LOCATION=$REGISTRY/tbs-sample-python
+export IMAGE_LOCATION=$REPOSITORY/tbs-sample-python
 pushd k8s/overlays/python
 kustomize edit set image tbs-sample-app=$IMAGE_LOCATION
 kustomize build | k apply -f-
@@ -378,7 +411,7 @@ Try [Dive](https://github.com/wagoodman/dive) to review the images.
 |----------------------------------------------------------------|
 
 ```bash
-$ dive $REGISTRY/tbs/tbs-sample-python
+$ dive $REPOSITORY/tbs-sample-python
 ```
 
 ## Tanzu Observability by Wavefront
@@ -427,7 +460,7 @@ kp image delete tbs-sample-nodejs
 kp image delete tbs-sample-python
 ```
 
-* Delete the images from your `$REGISTRY`
+* Delete the images from your `$REPOSITORY`
 
 * Potentially uninstall TBS...but why would you? :)
 
