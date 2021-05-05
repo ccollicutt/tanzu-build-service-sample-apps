@@ -91,7 +91,7 @@ kp build logs tbs-sample-go
 We can also use dry run and output to yaml to get an example the Kubernetes object definition.
 
 ```bash
-[ -z "$REPOSITORY" ] && echo "ERROR: Please set REGISTRY variable" || \
+[ -z "$REPOSITORY" ] && echo "ERROR: Please set REPOSITORY variable" || \
 kp image create tbs-sample-go \
 --tag $REPOSITORY/tbs-sample-go \
 --git https://github.com/ccollicutt/tbs-sample-apps/ \
@@ -155,7 +155,7 @@ sourceresolvers.kpack.io
 Create the TBS image.
 
 ```bash
-[ -z "$REPOSITORY" ] && echo "ERROR: Please set REGISTRY variable" || \
+[ -z "$REPOSITORY" ] && echo "ERROR: Please set REPOSITORY variable" || \
 kp image create tbs-sample-nodejs \
 --tag $REPOSITORY/tbs-sample-nodejs \
 --git https://github.com/ccollicutt/tbs-sample-apps/ \
@@ -187,7 +187,7 @@ kp clusterstore add default -b gcr.io/paketo-community/python
 
 ```bash
 pushd builders
-[ -z "$TBS_REPOSITORY" ] && echo "ERROR: Please set REGISTRY variable" || \
+[ -z "$TBS_REPOSITORY" ] && echo "ERROR: Please set REPOSITORY variable" || \
 kp clusterbuilder create py-builder \
 --tag $TBS_REPOSITORY/paketo-buildpacks_python \
 --order python.yaml \
@@ -236,7 +236,7 @@ Group #1
 
 
 ```bash
-[ -z "$REPOSITORY" ] && echo "ERROR: Please set REGISTRY variable" || \
+[ -z "$REPOSITORY" ] && echo "ERROR: Please set REPOSITORY variable" || \
 kp image create tbs-sample-python \
 --cluster-builder py-builder \
 --tag $REPOSITORY/tbs-sample-python \
@@ -307,7 +307,7 @@ kubectl create secret docker-registry regcred \
 It's easy to forget one of these. :)
 
 ```bash
-[ -z "$REPOSITORY" ] && echo "ERROR: Please set REGISTRY variable"
+[ -z "$REPOSITORY" ] && echo "ERROR: Please set REPOSITORY variable"
 kubectl get secret regcred > /dev/null || echo "ERROR: Please create a kubernetes registry access secret"
 kn sample-apps # ensuring using sample-apps namespace
 ```
@@ -377,7 +377,7 @@ k get pods
 <p>
 
 ```
-$ k get pods
+$ k get pods
 NAME                                 READY   STATUS              RESTARTS   AGE
 sample-app-go-58b6cf77cb-cvxbf       1/1     Running             0          21s
 sample-app-go-58b6cf77cb-l86g2       1/1     Running             0          21s
