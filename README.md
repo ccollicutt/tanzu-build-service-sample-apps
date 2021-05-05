@@ -186,13 +186,14 @@ kp clusterstore add default -b gcr.io/paketo-community/python
 |--------------------------------------------------------------------------------------------------------------------------------------|
 
 ```bash
-cd builders
+pushd builders
 [ -z "$TBS_REPOSITORY" ] && echo "ERROR: Please set REGISTRY variable" || \
 kp clusterbuilder create py-builder \
 --tag $TBS_REPOSITORY/paketo-buildpacks_python \
 --order python.yaml \
 --stack base \
 --store default
+popd
 ```
 
 Examine its status.
@@ -283,6 +284,7 @@ export REPOSITORY=<your registry>
 
 ```bash
 k create ns sample-apps
+kn sample-apps
 ```
 
 ### Create a Regcred Kubernetes Secret
@@ -307,6 +309,7 @@ It's easy to forget one of these. :)
 ```bash
 [ -z "$REPOSITORY" ] && echo "ERROR: Please set REGISTRY variable"
 kubectl get secret regcred > /dev/null || echo "ERROR: Please create a kubernetes registry access secret"
+kn sample-apps # ensuring using sample-apps namespace
 ```
 
 ### Deploy Apps to Kubernetes
@@ -363,6 +366,32 @@ kustomize edit set image tbs-sample-app=$IMAGE_LOCATION
 kustomize build | k apply -f-
 popd
 ```
+
+### Show the pods coming up
+
+```
+k get pods
+```
+
+<details><summary>View example output</summary>
+<p>
+
+```
+$ k get pods
+NAME                                 READY   STATUS              RESTARTS   AGE
+sample-app-go-58b6cf77cb-cvxbf       1/1     Running             0          21s
+sample-app-go-58b6cf77cb-l86g2       1/1     Running             0          21s
+sample-app-go-58b6cf77cb-ltrd4       1/1     Running             0          21s
+sample-app-nodejs-659748597c-n8j8s   1/1     Running             0          12s
+sample-app-nodejs-659748597c-tsfg9   1/1     Running             0          12s
+sample-app-nodejs-659748597c-vjn6h   1/1     Running             0          12s
+sample-app-python-5694547b-k8zhd     0/1     ContainerCreating   0          3s
+sample-app-python-5694547b-lzj7d     0/1     ContainerCreating   0          3s
+sample-app-python-5694547b-s5m9m     0/1     ContainerCreating   0          3s
+```
+
+</p>
+</details>
 
 ## Access the Applications
 
